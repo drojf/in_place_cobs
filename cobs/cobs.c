@@ -30,7 +30,7 @@ void encode_in_place(uint8_t * data, uint32_t data_size)
 	uint32_t last_zero_index = 0;
 	uint8_t consecutive_nonzero_plus_one = 1;
 
-	for (uint32_t i = 0; i < data_size; i++)
+	for (uint32_t i = 1; i < data_size; i++)
 	{
 		if (data[i] == 0)
 		{
