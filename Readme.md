@@ -1,4 +1,4 @@
-# In Place Cobs
+# (In Place) Cobs
 
 ## Description
 
@@ -35,15 +35,13 @@ This explanation is not rigorous, but might help those who aren't familiar in th
 
 ## Usage
 
-```void encode_in_place(uint8_t * data, uint32_t data_size)```
+```void encode(uint8_t * in, uint32_t data_size, uint8_t * out)```
 
-This function encodes a packet of size up to 254 bytes. There are **special requirements** for the data formatting as below:
+This function encodes a packet, given by the `in` argument.
+Specify the size of the packet by using the `data_size` argument (max length is 254 bytes).
 
-- The first byte of data (`data[0]`) must not contain your packet data. It will be overwritten by the encoder.
-- The bytes from `data[1]` to `data[data_size-1]` should contain your actual data
-- `data_size` is the size of all the data, including the first dummy byte. Your actual packet size will be `data_size - 1`
-
-The encoded packet is will not contain any zeros. You should insert/transmit your own `0`'s to delimit packets yourself.
+The encoded packet will be of size `data_size + 1` and will be placed in `out`.
+The encoded packet will not contain any zeros. You should insert/transmit your own `0`'s to delimit packets yourself.
 
 ```bool decode_in_place(uint8_t * data, uint32_t data_size)```
 
@@ -54,7 +52,7 @@ you should use your own method for error detection.
 
 ## Implementation
 
-There are various other implementations on Github, but I haven't seen one which does an in-place encode/decode.
+There are various other implementations on Github, but I haven't seen one which does an in-place decode, and the encode function seems more complicated than necessary.
 I have written my implementation to be easy to understand and analyse, not necessarily for best performance.
 I think this implementation is similar to the one described in the embeddedrelated.com article.
 

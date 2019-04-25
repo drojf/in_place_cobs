@@ -24,28 +24,28 @@ bool decode_in_place(uint8_t * data, uint32_t data_size)
 }
 
 // data_size must be less than 254 for this function to work correctly.
-// one byte must be prepended to the data as it will be overwritten with the first marker
-void encode_in_place(uint8_t * data, uint32_t data_size)
+void encode(uint8_t * in, uint32_t data_size, uint8_t * out)
 {
 	uint32_t last_zero_index = 0;
 	uint8_t consecutive_nonzero_plus_one = 1;
 
-	for (uint32_t i = 1; i < data_size; i++)
+	for (uint32_t i = 0; i < data_size; i++)
 	{
-		if (data[i] == 0)
+		if (in[i] == 0)
 		{
 			// save the number of consecutive non-zero seen so far in place of the last '0' seen. This ends the block.
 			// reset the consecutive count, and set the new zero location. This starts the block.
-			data[last_zero_index] = consecutive_nonzero_plus_one;
-			last_zero_index = i;
+			out[last_zero_index] = consecutive_nonzero_plus_one;
+			last_zero_index = i + 1;
 			consecutive_nonzero_plus_one = 1;
 		}
 		else
 		{
+			out[i + 1] = in[i];
 			consecutive_nonzero_plus_one += 1;
 		}
 	}
 
 	// The rightmost zero in the array would not have been filled in at this point, so fill it in.
-	data[last_zero_index] = consecutive_nonzero_plus_one;
+	out[last_zero_index] = consecutive_nonzero_plus_one;
 }
