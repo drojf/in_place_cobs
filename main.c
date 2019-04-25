@@ -42,9 +42,37 @@ void test_Encode254NonzeroBytes()
 	}
 }
 
+void test_BasicTest()
+{
+	uint8_t test_input_array[6] = { 0,1,2,0,3,0 };
+
+	uint8_t input_array[6];
+	for (int i = 0; i < 6; i++)
+	{
+		input_array[i] = test_input_array[i];
+	}
+
+	encode_in_place(input_array, 6);
+
+	// The encoded data should have no 0's
+	for (int i = 0; i < 6; i++)
+	{
+		TEST_ASSERT_NOT_EQUAL(0, input_array[i]);
+	}
+
+	decode_in_place(input_array, 6);
+
+	for (int i = 0; i < 6; i++)
+	{
+		TEST_ASSERT_EQUAL_UINT8(test_input_array[i], input_array[i]);
+	}
+}
+
+
 int main()
 {
 	UNITY_BEGIN();
+	RUN_TEST(test_BasicTest);
 	RUN_TEST(test_Encode254NonzeroBytes);
 	return UNITY_END();
 }

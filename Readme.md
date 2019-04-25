@@ -2,19 +2,22 @@
 
 ## Description
 
-This repository contains an implementation of Consistent Overhead Byte Stuffing (COBS). 
+This repository contains an implementation of Consistent Overhead Byte Stuffing (COBS).
 It performs an in-place encode/decode, which simplifies the algorithm.
 
 ### Quick Explanation of COBS
 
 Given a communication channel where data is not sent as packets, an algorithm is required to overlay a 'packet' model.
 Simply transmitting the packet length + packet data will eventually fail if the receiver ever gets out of sync or if the packet length gets corrupted.
+Using this method, there is no way to recover without telling the sender to restart communication.
 
 There are various methods for "packet framing":
 
 - ASCII control characters: https://en.wikipedia.org/wiki/Control_character
 - https://en.wikipedia.org/wiki/Serial_Line_Internet_Protocol
 - COBS, and more...
+- Using out-of-band signalling/extra signals to negotiate packets (https://en.wikipedia.org/wiki/RS-232#RTS,_CTS,_and_RTR)
+- Using a time delay to delimit packets ('if nothing is sent for 50ms, the packet has ended').
 
 The main advantage of COBS is that it has a consistent overhead of adding one extra byte to your packet (max packet length 254 bytes).
 This equates to roughly a .4% overhead for a 255 byte packet, where a basic 'control character' encoding scheme will be inconsistent -
@@ -44,7 +47,7 @@ The encoded packet is will not contain any zeros. You should insert/transmit you
 
 ```bool decode_in_place(uint8_t * data, uint32_t data_size)```
 
-This function decodes a packet. The output data will start at `data[1]`.
+This function decodes a packet. After decoding, the output data will start at `data[1]`.
 It is assumed that a higher level process will detect `0`'s in the bytestream and chunk those into packets before being fed into this function.
 The function returns true on success, false if there appears to be an error. Note that many errors are undetectable with this scheme -
 you should use your own method for error detection.
