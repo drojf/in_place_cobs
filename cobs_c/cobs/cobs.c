@@ -3,6 +3,7 @@
 
 // Returned data starts at data[1] onwards. Returned data will take the indices 1 to data_size-1
 // data[0] will always equal 0.
+// Packet must have size > 0
 //note: the algoithm may have to be changed if you using uint8_t instead of uint32_t for some values
 bool decode_in_place(uint8_t * data, uint32_t data_size)
 {
