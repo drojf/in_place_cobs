@@ -5,7 +5,7 @@
 // data[0] will always equal 0.
 // Packet must have size > 0
 //note: the algoithm may have to be changed if you using uint8_t instead of uint32_t for some values
-bool decode_in_place(uint8_t * data, uint32_t data_size)
+bool COBS_decode_in_place(uint8_t * data, uint32_t data_size)
 {
 	uint32_t i = 0;
 	while (i < data_size)
@@ -25,7 +25,7 @@ bool decode_in_place(uint8_t * data, uint32_t data_size)
 }
 
 // data_size must be less than 254 for this function to work correctly.
-void encode(uint8_t * in, uint32_t data_size, uint8_t * out)
+void COBS_encode(uint8_t * in, uint32_t data_size, uint8_t * out)
 {
 	uint32_t last_zero_index = 0;
 	uint8_t consecutive_nonzero_plus_one = 1;
