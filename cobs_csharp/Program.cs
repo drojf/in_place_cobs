@@ -1,11 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace cobs_csharp
 {
+    class COGS_Serial
+    {
+        SerialPort port;
+        bool has_read_error;
+        int position;
+
+
+        public COGS_Serial(SerialPort port)
+        {
+            this.port = port;
+        }
+
+        public void Write(byte[] packet)
+        {
+            var encoded_message = COBS.Encode(packet);
+            Console.WriteLine("sending encoded message", encoded_message);
+            //append zero to indicate end of packet
+            var packetWithEndMarker = new List<byte>(encoded_message);
+            packetWithEndMarker.Add(0);
+
+            port.Write(packetWithEndMarker.ToArray(), 0, packetWithEndMarker.Count);
+        }
+
+        public async Task<byte[]> ReadPacket()
+        {
+            List<byte> allBytes = new List<byte>();
+
+            while(true)
+            {
+                byte[] recvBuf = new byte[1];
+                int num_bytes_received = await port.BaseStream.ReadAsync(recvBuf, 0, 1);
+                //Console.WriteLine($"Got raw byte {num_bytes_received}");
+
+                if (num_bytes_received != 1)
+                {
+                    throw new Exception("invalid num bytes received");
+                }
+
+                if (allBytes.Count <= 255)
+                {
+                    if (recvBuf[0] != 0)
+                    {
+                        allBytes.Add(recvBuf[0]);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    //If too many bytes are received, then continue to receive bytes, but don't store them.
+                    //Once the zero is reached, throw exception indicating too many bytes in packet
+                    if (recvBuf[0] == 0)
+                    {
+                        throw new Exception("Too many bytes in packet!");
+                    }
+                }
+            }
+
+            return COBS.Decode(allBytes.ToArray());
+        }
+    }
+
     class Program
     {
         struct TestCase
@@ -76,6 +141,34 @@ namespace cobs_csharp
             checkInputOutputSameTest(input_array, expected_encoded_data.ToArray());
         }
 
+        static void ReceivedPacketHandler(byte[] received_packet)
+        {
+            /*Console.WriteLine("Received packet:");
+            foreach (byte b in received_packet)
+            {
+                Console.Write($"{b:x} ");
+            }*/
+
+            if(received_packet[0] == 1)
+            {
+                int strlen = 0;
+                foreach(byte b in received_packet.Skip(1))
+                {
+                    if(b == 0)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        strlen += 1;
+                    }
+                }
+
+                string received_string = Encoding.UTF8.GetString(received_packet, 1, strlen);
+                Console.Write(received_string);
+            }
+        }
+
         static void Main(string[] args)
         {
             foreach(TestCase tc in test_cases)
@@ -84,6 +177,36 @@ namespace cobs_csharp
             }
 
             test_Encode254NonzeroBytes();
+
+
+            SerialPortManager portManager = new SerialPortManager();
+            portManager.OpenSerial("COM4", baudRate: 1000000);
+            System.IO.Ports.SerialPort port = portManager.GetSerialPort();
+
+            COGS_Serial cogs_serial = new COGS_Serial(port);
+
+            port.DiscardInBuffer();
+            port.DiscardOutBuffer();
+
+            //Console.WriteLine("Sending packet");
+            //cogs_serial.Write(new byte[] { 1, 2, 3, 0, 4, 5, 0, 123, 0, 2 });
+
+            Console.WriteLine("Sending packet to start test");
+            cogs_serial.Write(new byte[] { 255 });
+
+            while (true)
+            {
+                //Console.WriteLine("Receiving packet");
+                //            byte[] received_packet = new byte[1000];
+                //            int bytes_read = port.Read(received_packet, 0, 1000);
+
+                byte[] received_packet = cogs_serial.ReadPacket().Result;
+                ReceivedPacketHandler(received_packet);
+            }
+
+
+
+            Console.ReadKey();
         }
     }
 }

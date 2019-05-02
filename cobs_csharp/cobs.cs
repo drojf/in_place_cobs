@@ -19,6 +19,11 @@ namespace cobs_csharp
 
         public static byte[] Encode(byte[] input)
         {
+            if(input == null || input.Length == 0 || input.Length > 254)
+            {
+                throw new ArgumentException("'input' must be non-null and be non-zero length not greater than 254");
+            }
+
             byte[] output = new byte[input.Length + 1];
 
             int last_zero_index = 0;
@@ -45,9 +50,9 @@ namespace cobs_csharp
 
         public static byte[] Decode(byte[] input)
         {
-            if(input == null || input.Length == 0)
+            if(input == null || input.Length == 0 || input.Length > 255)
             {
-                throw new ArgumentException("'input' must be non-null and be non-zero length");
+                throw new ArgumentException("'input' must be non-null and be non-zero length not greater than 255");
             }
 
             byte[] output = new byte[input.Length - 1];
