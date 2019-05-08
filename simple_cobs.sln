@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simple_cobs", "cobs_c\simpl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cobs_csharp", "cobs_csharp\cobs_csharp.csproj", "{B675BC7D-32F6-4971-8268-A6ACA028CDE4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioUploader", "AudioUploader\AudioUploader.csproj", "{FB196040-43EF-4058-B74C-840343285835}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,18 @@ Global
 		{B675BC7D-32F6-4971-8268-A6ACA028CDE4}.Release|x64.Build.0 = Release|Any CPU
 		{B675BC7D-32F6-4971-8268-A6ACA028CDE4}.Release|x86.ActiveCfg = Release|Any CPU
 		{B675BC7D-32F6-4971-8268-A6ACA028CDE4}.Release|x86.Build.0 = Release|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Debug|x64.Build.0 = Debug|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Debug|x86.Build.0 = Debug|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Release|x64.ActiveCfg = Release|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Release|x64.Build.0 = Release|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Release|x86.ActiveCfg = Release|Any CPU
+		{FB196040-43EF-4058-B74C-840343285835}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
