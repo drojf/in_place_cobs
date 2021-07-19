@@ -26,7 +26,7 @@ void checkInputOutputSameTest(uint8_t * data_to_encode, uint8_t * expected_encod
 	uint8_t working_buffer[255];
 
 	// encode data_to_encode into working_buffer
-	encode(data_to_encode, length, working_buffer);
+	COBS_encode(data_to_encode, length, working_buffer);
 
 	if (expected_encoded_data != NULL)
 	{
@@ -34,7 +34,7 @@ void checkInputOutputSameTest(uint8_t * data_to_encode, uint8_t * expected_encod
 	}
 
 	// decode working_buffer in-place. Data starts at working_buffer[1]
-	decode_in_place(working_buffer, length + 1);
+	COBS_decode_in_place(working_buffer, length + 1);
 
 	TEST_ASSERT_EQUAL_UINT8_ARRAY_MESSAGE(data_to_encode, &working_buffer[1], length, "Decoded output is not the same as input!");
 }
